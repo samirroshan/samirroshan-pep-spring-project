@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -31,33 +32,33 @@ public class MessageService {
             return ResponseEntity.status(404).body("Message not found"); // Directly handling the error
         }
     }*/
-    public Optional<Message> getMessageById(Integer id) {
-        return messageRepository.findById(id);
+    public Message getMessageById(Integer id) {
+        return messageRepository.findById(id).orElse(null);
     }
     
     
     
 
-        public int updateMessage(Integer id, String newText) {
-            if (!messageRepository.existsById(id)) {
-                return 0; 
-            }
-            if (newText == null || newText.trim().isEmpty() || newText.length() > 255) {
-                return -1; 
-            }
-            messageRepository.updateMessageTextById(id, newText);
-            return 1; 
+    public int updateMessage(Integer id, String message) {
+        if (!messageRepository.existsById(id)) {
+            return 0; 
         }
+        if (((message == null) || (message.trim().isEmpty())) || (message.length() > 255)) {
+            return -1; 
+        }
+        messageRepository.updateMessageTextById(id, message);
+        return 1; 
+    }
         
         
     
-        public int deleteMessage(Integer id) {
-            if (!messageRepository.existsById(id)) {
-                return 0; 
-            }
-            messageRepository.deleteByMessageId(id);
-            return 1; 
+    public int deleteMessage(Integer id) {
+        if (!messageRepository.existsById(id)) {
+           return 0; 
         }
+        messageRepository.deleteByMessageId(id);
+        return 1; 
+    }
         
     
     

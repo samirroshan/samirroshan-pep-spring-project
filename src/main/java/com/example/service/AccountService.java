@@ -18,14 +18,18 @@ public class AccountService {
     //public Account createAccount(Account account) {
       //  return accountRepository.save(account);
     //}
+    //find a way to hash before saving password
     public Account createAccount(Account a) {
         a.setPassword(hashPassword(a.getPassword())); // Hash password before saving
         return accountRepository.save(a);
     }
+    //verify the users username and their password 
+    //should return an authenticated account if the verification was a success
     public Optional<Account> authenticateUser(String username, String password) {
         Optional<Account> accountOpt = accountRepository.findByUsername(username);
         if (accountOpt.isPresent()) {
             Account account = accountOpt.get();
+            //checking if the passwords are same 
             if (account.getPassword().equals(password)) {
                 return Optional.of(account);
             }
@@ -33,20 +37,25 @@ public class AccountService {
         return Optional.empty();
     }
 
-    
+    //check if the accout exists by id 
     public boolean existsById(Integer id) {
         return accountRepository.existsById(id);
     }
+    //need to create a way to find the account by username
     public Optional<Account> findByUsername(String username) {
         return accountRepository.findByUsername(username);
     }
-    private String hashPassword(String password) {
+    
+    private String hashPassword(String p) {
         try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] encodedHash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
-            return Base64.getEncoder().encodeToString(encodedHash);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Error hashing password", e);
+            MessageDigest msg = MessageDigest.getInstance("SHA-256");
+
+            byte[] code = msg.digest(p.getBytes(StandardCharsets.UTF_8));
+            return Base64.getEncoder().encodeToString(code);
+
+        } 
+        catch (NoSuchAlgorithmException ex) {
+            throw new RuntimeException("Error hashing password", ex);
         }
     }
 }
