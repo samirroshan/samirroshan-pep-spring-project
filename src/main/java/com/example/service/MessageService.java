@@ -13,23 +13,28 @@ public class MessageService {
     @Autowired 
     private MessageRepository messageRepository;
 
+
+    //create a message and then you should be able to save it here
     public Message createMessage(Message message) {
         return messageRepository.save(message);
     }
-
+    //find a way to get all the message
     public List<Message> getAllMessages() {
         return messageRepository.findAll();
     }
+    //find a way to get the messages from the user
     public List<Message> getMessagesForUser(Integer userId) {
         return messageRepository.findByPostedBy(userId);
     }
+    //find a way to get message by id
+    //fix this something isn't working right 
     /* 
     public ResponseEntity<?> getMessageById(Integer id) {
         Optional<Message> message = messageRepository.findById(id);
         if (message.isPresent()) {
             return ResponseEntity.ok(message.get());
         } else {
-            return ResponseEntity.status(404).body("Message not found"); // Directly handling the error
+            return ResponseEntity.status(404).body("Message not found"); 
         }
     }*/
     public Message getMessageById(Integer id) {
@@ -38,7 +43,7 @@ public class MessageService {
     
     
     
-
+    //onces you find the id update the message 
     public int updateMessage(Integer id, String message) {
         if (!messageRepository.existsById(id)) {
             return 0; 

@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.List;
 @Repository 
 public interface MessageRepository extends JpaRepository<Message, Integer> {
     //we can find the message by tracing back to the person sent it and getting their id
