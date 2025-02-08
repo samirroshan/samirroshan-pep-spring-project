@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * TODO: You will need to write your own endpoints and handlers for your controller using Spring. The endpoints you will need can be
@@ -69,10 +67,16 @@ public class SocialMediaController {
     }
 
     @GetMapping("messages/{messageId}")
-    public ResponseEntity<?> getMessageById(@PathVariable Integer messageId) {
-        Optional<Message> message = messageService.getMessageById(messageId);
-        return message.isPresent() ? ResponseEntity.ok(message.get()) : ResponseEntity.ok().body("");  // Ensure 200 for missing message
+    public ResponseEntity<Message> getMessageById(@PathVariable Integer messageId) {
+        return messageService.getMessageById(messageId).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.ok().build()); 
     }
+
+
+
+
+
+
+
     
 
 
@@ -81,12 +85,35 @@ public class SocialMediaController {
         if (updatedMessage.getMessageText().isBlank() || updatedMessage.getMessageText().length() > 255) {
             return ResponseEntity.badRequest().body("Invalid message text");
         }
+
+        Optional<Message> existingMessage = messageService.getMessageById(messageId);
+        if (existingMessage.isEmpty()) {
+            return ResponseEntity.status(400).body("Message not found");
+        }
+
         int rowsUpdated = messageService.updateMessage(messageId, updatedMessage.getMessageText());
-        return rowsUpdated > 0 ? ResponseEntity.ok(rowsUpdated) : ResponseEntity.badRequest().body("Message not found");
+        return ResponseEntity.ok(rowsUpdated);
     }
+
+
+
+
+
+
+
+
+
     @DeleteMapping("messages/{messageId}")
     public ResponseEntity<?> deleteMessage(@PathVariable Integer messageId) {
-        int rowsDeleted = messageService.deleteMessage(messageId);
-        return rowsDeleted > 0 ? ResponseEntity.ok(rowsDeleted) : ResponseEntity.ok().body("");
+        int result = messageService.deleteMessage(messageId);
+        return ResponseEntity.ok(result == 1 ? 1 : null); 
     }
+
+
+        
+
+
+
+
+
 }
