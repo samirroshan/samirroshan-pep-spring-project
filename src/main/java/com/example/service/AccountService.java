@@ -18,9 +18,9 @@ public class AccountService {
     //public Account createAccount(Account account) {
       //  return accountRepository.save(account);
     //}
-    //find a way to hash before saving password
+    //find a way to set the password 
     public Account createAccount(Account a) {
-        a.setPassword(hashPassword(a.getPassword())); // Hash password before saving
+        a.setPassword(a.getPassword()); 
         return accountRepository.save(a);
     }
     //verify the users username and their password 
@@ -46,16 +46,5 @@ public class AccountService {
         return accountRepository.findByUsername(username);
     }
     
-    private String hashPassword(String p) {
-        try {
-            MessageDigest msg = MessageDigest.getInstance("SHA-256");
-
-            byte[] code = msg.digest(p.getBytes(StandardCharsets.UTF_8));
-            return Base64.getEncoder().encodeToString(code);
-
-        } 
-        catch (NoSuchAlgorithmException ex) {
-            throw new RuntimeException("Error hashing password", ex);
-        }
-    }
+    
 }
